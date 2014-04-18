@@ -1,0 +1,83 @@
+
+
+```{r}
+summary(RDPC_ESPVIDALinear, cor=FALSE)
+```
+
+```{r}
+scatterplot(ESPVIDA~RDPC, reg.line=lm, smooth=TRUE, spread=TRUE, id.method='mahal', id.n = 2, boxplots='xy', span=0.5,
+   data=DadosSc)
+```
+
+```{r}
+scatterplot(residuals.RDPC_ESPVIDALinear~fitted.RDPC_ESPVIDALinear, reg.line=lm, smooth=TRUE, spread=TRUE, 
+  id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=DadosSc)
+```
+
+```{r}
+summary(RDPC_ESPVIDALog, cor=FALSE)
+```
+
+```{r}
+scatterplot(ESPVIDA~RDPCLog, reg.line=lm, smooth=TRUE, spread=TRUE, id.method='mahal', id.n = 2, boxplots='xy', 
+  span=0.5, data=DadosSc)
+```
+
+```{r}
+scatterplot(residuals.RDPC_ESPVIDALog~fitted.RDPC_ESPVIDALog, reg.line=lm, smooth=TRUE, spread=TRUE, 
+  id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=DadosSc)
+```
+
+```{r}
+BRASIL_RDPC_ESPVIDALinear <- lm(ESPVIDA~RDPC, data=IDH)
+summary(BRASIL_RDPC_ESPVIDALinear)
+```
+
+```{r}
+IDH$fitted.BRASIL_RDPC_ESPVIDALinear <- fitted(BRASIL_RDPC_ESPVIDALinear)
+IDH$residuals.BRASIL_RDPC_ESPVIDALinear <- residuals(BRASIL_RDPC_ESPVIDALinear)
+```
+
+```{r}
+scatterplot(ESPVIDA~RDPC, reg.line=lm, smooth=TRUE, spread=TRUE, id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=IDH)
+```
+
+```{r}
+scatterplot(residuals.BRASIL_RDPC_ESPVIDALinear~fitted.BRASIL_RDPC_ESPVIDALinear, reg.line=lm, smooth=TRUE, spread=TRUE, id.method='mahal', id.n = 2, 
+  boxplots='xy', span=0.5, data=IDH)
+```
+
+```{r}
+IDH$RDPCLog <- with(IDH, log(RDPC))
+```
+
+```{r}
+BRASIL_RDPC_ESPVIDALog <- lm(ESPVIDA~RDPCLog, data=IDH)
+summary(BRASIL_RDPC_ESPVIDALog)
+```
+
+```{r}
+IDH$fitted.BRASIL_RDPC_ESPVIDALog <- fitted(BRASIL_RDPC_ESPVIDALog)
+IDH$residuals.BRASIL_RDPC_ESPVIDALog <- residuals(BRASIL_RDPC_ESPVIDALog)
+```
+
+```{r}
+scatterplot(ESPVIDA~RDPCLog, reg.line=lm, smooth=TRUE, spread=TRUE, id.method='mahal', id.n = 2, boxplots='xy', 
+  span=0.5, data=IDH)
+```
+
+```{r}
+scatterplot(residuals.BRASIL_RDPC_ESPVIDALog~fitted.BRASIL_RDPC_ESPVIDALog, reg.line=lm, smooth=TRUE, spread=TRUE, 
+  id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=IDH)
+```
+
+```{r}
+save("IDH", 
+  file="/Users/daniel/Google Drive/UFSC-SIN/INE5649 - Técnicas Estatisticas de Predição/AtlasIdhParte/IDH.RData")
+```
+
+```{r}
+save("DadosSc", 
+  file="/Users/daniel/Google Drive/UFSC-SIN/INE5649 - Técnicas Estatisticas de Predição/AtlasIdhParte/DadosSc.RData")
+```
+
