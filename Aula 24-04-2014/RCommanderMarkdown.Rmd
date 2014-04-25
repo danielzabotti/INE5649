@@ -1,0 +1,99 @@
+<!-- R Commander Markdown Template -->
+
+
+Regressão linear: Apartamentos em Criciúma
+=======================
+
+### Daniel Amato Zabotti
+
+### `r as.character(Sys.Date())`
+
+```{r echo=FALSE}
+# include this code chunk as-is to set options
+opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+library(Rcmdr)
+```
+
+```{r}
+library(XLConnect, pos=4)
+```
+
+```{r}
+.Workbook <- 
+  loadWorkbook("/Users/daniel/Google Drive/UFSC-SIN/INE5649 - Técnicas Estatisticas de Predição/Aula 24-04-2014/Apartamentos Criciuma completo.xls")
+```
+
+```{r}
+ApartamentosCriciuma <- readWorksheet(.Workbook, "Parte_dos_dados")
+```
+
+```{r}
+scatterplot(valorDolar~ArePriv, reg.line=lm, smooth=FALSE, spread=FALSE, id.method='mahal', id.n = 2, boxplots='xy', span=0.5, 
+  data=ApartamentosCriciuma)
+```
+
+### Observando o gráfico há evidência de relação linear entre a área do imóvel e o seu valor.
+### Fica evidente pelo gráfico que a variância não é constante.
+### A distribuição das variáveis náo é simétrica. Podemos confirmar observando os boxplots.
+
+```{r}
+RegLinearValorDolarAreaPriv <- lm(valorDolar~ArePriv, data=ApartamentosCriciuma)
+summary(RegLinearValorDolarAreaPriv)
+```
+
+### De acordo com a regressão linear a equação é y = 526.48x -18795.79
+### O valor de R quadrado é 0.843. Significando que 84% da variância do valor do imóvel pode ser explicado pela área
+
+```{r}
+ApartamentosCriciuma$fitted.RegLinearValorDolarAreaPriv <- fitted(RegLinearValorDolarAreaPriv)
+ApartamentosCriciuma$residuals.RegLinearValorDolarAreaPriv <- residuals(RegLinearValorDolarAreaPriv)
+```
+
+```{r}
+scatterplot(residuals.RegLinearValorDolarAreaPriv~fitted.RegLinearValorDolarAreaPriv, reg.line=lm, smooth=FALSE, spread=FALSE, 
+  id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=ApartamentosCriciuma)
+```
+
+### O modelo parece não estar adequado. A variabilidade em Y é grande e em X aumenta proporcionalmente.
+### Podemos aplicar a transformação logarítmica em ambas as variáveis, afim de preservar a relação linear já observada
+
+
+
+```{r}
+ApartamentosCriciuma$ArePrivLog <- with(ApartamentosCriciuma, log(ArePriv))
+```
+
+```{r}
+ApartamentosCriciuma$valorDolarLog <- with(ApartamentosCriciuma, log(valorDolar))
+```
+
+### O novo gráfico, com as variáveis transformadas fica
+
+```{r}
+scatterplot(valorDolarLog~ArePrivLog, reg.line=lm, smooth=FALSE, spread=FALSE, id.method='mahal', id.n = 2, boxplots='xy', span=0.5, 
+  data=ApartamentosCriciuma)
+```
+
+### Agora a relação fica mais harmoniosa.
+
+```{r}
+RegLinearLogDolarAreaPriv <- lm(valorDolarLog~ArePrivLog, data=ApartamentosCriciuma)
+summary(RegLinearLogDolarAreaPriv)
+```
+
+### A nova fórmula de regressão é y = 1.38x + 3.98
+### O valor de R quadrado é 0.843. Significando que 84% da variância do valor do imóvel pode ser explicado pela área
+
+
+```{r}
+ApartamentosCriciuma$fitted.RegLinearLogDolarAreaPriv <- fitted(RegLinearLogDolarAreaPriv)
+ApartamentosCriciuma$residuals.RegLinearLogDolarAreaPriv <- residuals(RegLinearLogDolarAreaPriv)
+```
+
+```{r}
+scatterplot(residuals.RegLinearLogDolarAreaPriv~fitted.RegLinearLogDolarAreaPriv, reg.line=lm, smooth=FALSE, spread=FALSE, 
+  id.method='mahal', id.n = 2, boxplots='xy', span=0.5, data=ApartamentosCriciuma)
+```
+
+### Agora a distribuição dos erros ficou mais aleatória, indicando que o modelo está mais adequado.
+
